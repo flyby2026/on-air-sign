@@ -21,7 +21,6 @@ function updateImage() {
   const day = now.getDay(); // Monday = 1
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  if (day !== 1) return;
 
   for (const slot of mondaySchedule) {
     const start = timeToMinutes(slot.start);
