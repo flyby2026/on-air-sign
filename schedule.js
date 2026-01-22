@@ -1,21 +1,47 @@
-const schedule = [
-  { start: 0,    end: 600,  image: "images/MONDAY OPEN STUDIO - 12AM - 10AM.png" }, // 12:00–10:00
-  { start: 600,  end: 660,  image: "images/DJ Spirit - Show your Spirit! (Monday - 10-11 am).png" },
-  { start: 660,  end: 780,  image: "images/MONDAY OPEN STUDIO - 11AM-1PM.png" },
-  { start: 780,  end: 1020, image: "images/MONDAY WIKD TRAINING SLOT - 1pm-5pm).png" },
-  { start: 1020, end: 1080, image: "images/MONDAY open studio 5-6pm).png" },
-  { start: 1080, end: 1140, image: "images/MONDAY DJ L - Showcase (Monday 6-7 pm) (1).png" },
-  { start: 1140, end: 1260, image: "images/MONDAY DJ Starman - The Flashback (monday 7-9 pm).png" },
-  { start: 1260, end: 1320, image: "images/MONDAY DJ Desinova - The Cosmic Jam (monday 9-10 pm).png" },
-  { start: 1320, end: 1380, image: "images/MONDAY DJ biscuit- The Jam (monday 10-11 pm).png" },
-  { start: 1380, end: 1440, image: "images/MONDAY DJ noli- holy cannoli (monday 11pm-12am).png" }
-];
+const weeklySchedule = {
+  // MONDAY (1)
+  1: [
+    { start: 0, end: 600, image: "images/MONDAY OPEN STUDIO - 12AM - 10AM.png" },
+    { start: 600, end: 660, image: "images/DJ Spirit - Show your Spirit! (Monday - 10-11 am).png" },
+    { start: 660, end: 780, image: "images/MONDAY OPEN STUDIO - 11AM-1PM.png" },
+    { start: 780, end: 1020, image: "images/MONDAY WIKD TRAINING SLOT - 1pm-5pm).png" },
+    { start: 1020, end: 1080, image: "images/MONDAY open studio 5-6pm).png" },
+    { start: 1080, end: 1140, image: "images/MONDAY DJ L - Showcase (Monday 6-7 pm) (1).png" },
+    { start: 1140, end: 1260, image: "images/MONDAY DJ Starman - The Flashback (monday 7-9 pm).png" },
+    { start: 1260, end: 1320, image: "images/MONDAY DJ Desinova - The Cosmic Jam (monday 9-10 pm).png" },
+    { start: 1320, end: 1380, image: "images/MONDAY DJ biscuit- The Jam (monday 10-11 pm).png" },
+    { start: 1380, end: 1440, image: "images/MONDAY DJ noli- holy cannoli (monday 11pm-12am).png" }
+  ],
+
+  // TUESDAY (2)
+  2: [
+    { start: 0, end: 60, image: "images/DJ Nine - Nighttimes with Nine (Tuesday 12am - 1am).png" },
+    { start: 60, end: 120, image: "images/DJ BLUE - The Sorrow Hour (tuesday 1am-2am).png" },
+    { start: 120, end: 540, image: "images/OPEN STUDIO - 2AM-9AM.png" },
+    { start: 540, end: 600, image: "images/DJ Rocket - ROCKETFUEL (tuesday 9-10am).png" },
+    { start: 600, end: 660, image: "images/OPEN STUDIO - 10AM-11AM.png" },
+    { start: 660, end: 780, image: "images/Greg Keys - The Lunch rush (tuesday 11am-1pm).png" },
+    { start: 780, end: 840, image: "images/WIKD TRAINING SLOT - (1PM-2PM).png" },
+    { start: 840, end: 960, image: "images/DJ Haskell - The Soundscape (tuesday 2-4pm).png" },
+    { start: 960, end: 1080, image: "images/OPEN STUDIO - 4PM-6PM.png" },
+    { start: 1080, end: 1140, image: "images/DJ Whatsherface - the so and so show (tuesday 6-7pm).png" },
+    { start: 1140, end: 1200, image: "images/DJ Flieg - The Shakeup! (tuesday 7-8pm).png" },
+    { start: 1200, end: 1260, image: "images/DJ Player - 80s at 8 (tuesday 8-9pm).png" },
+    { start: 1260, end: 1320, image: "images/DJ Joe - Joe’s third set (tuesday 9-10pm).png" },
+    { start: 1320, end: 1380, image: "images/Dj keem - the altar (10-11pm).png" },
+    { start: 1380, end: 1440, image: "images/DJ Tia - the blue hour (11pm-12am).png" }
+  ]
+};
 
 function updateImage() {
   const now = new Date();
+  const day = now.getDay(); // 1 = Monday, 2 = Tuesday
   const minutesNow = now.getHours() * 60 + now.getMinutes();
 
-  for (const slot of schedule) {
+  const todaySchedule = weeklySchedule[day];
+  if (!todaySchedule) return;
+
+  for (const slot of todaySchedule) {
     if (minutesNow >= slot.start && minutesNow < slot.end) {
       document.getElementById("onAirImage").src = slot.image;
       return;
@@ -24,4 +50,4 @@ function updateImage() {
 }
 
 updateImage();
-setInterval(updateImage, 30000); // every 30 seconds
+setInterval(updateImage, 30000);
