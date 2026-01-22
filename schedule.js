@@ -1,12 +1,10 @@
-// ALWAYS SHOW THIS IF ANYTHING GOES WRONG
+// Fallback image (never black screen)
 const FALLBACK_IMAGE = "images/MONDAY OPEN STUDIO - 12AM - 10AM.png";
 
-// WEEKLY SCHEDULE
+// Weekly schedule
 const weeklySchedule = {
 
-  // =====================
   // MONDAY (1)
-  // =====================
   1: [
     { start: 0, end: 600, image: "images/MONDAY OPEN STUDIO - 12AM - 10AM.png" },
     { start: 600, end: 660, image: "images/DJ Spirit - Show your Spirit! (Monday - 10-11 am).png" },
@@ -20,9 +18,7 @@ const weeklySchedule = {
     { start: 1380, end: 1440, image: "images/MONDAY DJ noli- holy cannoli (monday 11pm-12am).png" }
   ],
 
-  // =====================
   // TUESDAY (2)
-  // =====================
   2: [
     { start: 0, end: 60, image: "images/TUESDAY DJ Nine - Nighttimes with Nine (Tuesday 12am - 1am).png" },
     { start: 60, end: 120, image: "images/TUESDAY DJ BLUE - The Sorrow Hour (tuesday 1am-2am).png" },
@@ -42,17 +38,19 @@ const weeklySchedule = {
   ]
 };
 
-// =====================
-// CORE LOGIC
-// =====================
+// Core logic
 function updateImage() {
   const img = document.getElementById("onAirImage");
+  const onAir = document.getElementById("onAir");
+  const offAir = document.getElementById("offAir");
+
   const now = new Date();
-  const day = now.getDay(); // 1 = Monday, 2 = Tuesday
+  const day = now.getDay();
   const minutesNow = now.getHours() * 60 + now.getMinutes();
 
-  // ALWAYS show something
   img.src = FALLBACK_IMAGE;
+  onAir.style.display = "none";
+  offAir.style.display = "block";
 
   const todaySchedule = weeklySchedule[day];
   if (!todaySchedule) return;
@@ -60,11 +58,21 @@ function updateImage() {
   for (const slot of todaySchedule) {
     if (minutesNow >= slot.start && minutesNow < slot.end) {
       img.src = slot.image;
+
+      if (
+        slot.image.toUpperCase().includes("OPEN STUDIO") ||
+        slot.image.toUpperCase().includes("TRAINING")
+      ) {
+        onAir.style.display = "none";
+        offAir.style.display = "block";
+      } else {
+        offAir.style.display = "none";
+        onAir.style.display = "block";
+      }
       return;
     }
   }
 }
 
-// INITIAL LOAD + LOOP
 updateImage();
 setInterval(updateImage, 15000);
