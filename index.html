@@ -26,7 +26,7 @@
       object-fit: contain;
     }
 
-    /* 🔴 ON AIR INDICATOR */
+    /* ON AIR */
     #onAir {
       position: absolute;
       top: 20px;
@@ -41,6 +41,23 @@
       animation: flash 1s infinite;
       box-shadow: 0 0 20px red;
       z-index: 10;
+      display: none;
+    }
+
+    /* OFF AIR */
+    #offAir {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 12px 24px;
+      background: #333;
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 28px;
+      font-weight: bold;
+      border-radius: 8px;
+      z-index: 10;
+      display: none;
     }
 
     @keyframes flash {
@@ -49,7 +66,7 @@
       100% { opacity: 1; }
     }
 
-    /* 🖱 Fullscreen Prompt */
+    /* Fullscreen Prompt */
     #fullscreenPrompt {
       position: absolute;
       inset: 0;
@@ -69,6 +86,7 @@
   <div id="container">
     <div id="fullscreenPrompt">CLICK ANYWHERE TO START</div>
     <div id="onAir">ON AIR</div>
+    <div id="offAir">OFF AIR</div>
     <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
   </div>
 
@@ -82,7 +100,7 @@
         document.documentElement.requestFullscreen().catch(() => {});
       }
       prompt.style.display = "none";
-      document.body.style.cursor = "none"; // hides cursor
+      document.body.style.cursor = "none";
     }
 
     document.addEventListener("click", goFullscreen);
