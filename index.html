@@ -11,6 +11,7 @@
       background: black;
       height: 100vh;
       overflow: hidden;
+      cursor: pointer;
     }
 
     #container {
@@ -39,22 +40,53 @@
       border-radius: 8px;
       animation: flash 1s infinite;
       box-shadow: 0 0 20px red;
+      z-index: 10;
     }
 
     @keyframes flash {
-      0%   { opacity: 1; }
-      50%  { opacity: 0.3; }
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
       100% { opacity: 1; }
+    }
+
+    /* 🖱 Fullscreen Prompt */
+    #fullscreenPrompt {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      font-size: 32px;
+      z-index: 100;
     }
   </style>
 </head>
 
 <body>
   <div id="container">
+    <div id="fullscreenPrompt">CLICK ANYWHERE TO START</div>
     <div id="onAir">ON AIR</div>
-    <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png" alt="On Air">
+    <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
   </div>
 
   <script src="schedule.js"></script>
+
+  <script>
+    const prompt = document.getElementById("fullscreenPrompt");
+
+    function goFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      prompt.style.display = "none";
+      document.body.style.cursor = "none"; // hides cursor
+    }
+
+    document.addEventListener("click", goFullscreen);
+    document.addEventListener("keydown", goFullscreen);
+  </script>
 </body>
 </html>
