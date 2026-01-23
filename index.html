@@ -35,34 +35,34 @@
     }
 
     /* =========================
-       LED BADGE BASE
+       LED BADGE BASE (SMALL)
     ========================== */
     .led-badge {
       position: absolute;
-      top: 20px;
-      left: 20px;
-      padding: 16px 34px;
-      border-radius: 6px;
-      font-family: "Courier New", Courier, monospace; /* LED-style */
-      font-size: 32px;
+      top: 16px;
+      right: 16px;              /* 🔹 back corner */
+      padding: 6px 14px;        /* 🔹 smaller */
+      border-radius: 4px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 16px;          /* 🔹 smaller text */
       font-weight: 900;
-      letter-spacing: 4px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      border: 3px solid rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.15);
       display: none;
       z-index: 10;
       position: relative;
     }
 
-    /* Scanlines */
+    /* Subtle scanlines */
     .led-badge::after {
       content: "";
       position: absolute;
       inset: 0;
       background: repeating-linear-gradient(
         to bottom,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.08) 1px,
+        rgba(255,255,255,0.06),
+        rgba(255,255,255,0.06) 1px,
         rgba(0,0,0,0) 3px,
         rgba(0,0,0,0) 5px
       );
@@ -71,37 +71,35 @@
     }
 
     /* =========================
-       ON AIR — RED LED
+       ON AIR — RED LED (SMALL)
     ========================== */
     #onAir {
       background: linear-gradient(#ff2a2a, #8b0000);
       color: #fff;
       text-shadow:
-        0 0 4px #ff4d4d,
-        0 0 12px #ff1a1a,
-        0 0 24px #ff0000;
+        0 0 2px #ff4d4d,
+        0 0 6px #ff1a1a;
       box-shadow:
-        0 0 20px #ff1a1a,
-        inset 0 0 12px rgba(0,0,0,0.6);
-      animation: ledPulse 1.1s infinite;
+        0 0 10px #ff1a1a,
+        inset 0 0 6px rgba(0,0,0,0.6);
+      animation: ledPulse 1.2s infinite;
     }
 
     /* =========================
-       OFF AIR — DIM LED
+       OFF AIR — DIM LED (SMALL)
     ========================== */
     #offAir {
       background: linear-gradient(#555, #222);
       color: #ccc;
-      text-shadow:
-        0 0 4px #777;
+      text-shadow: 0 0 2px #777;
       box-shadow:
-        0 0 10px #444,
-        inset 0 0 10px rgba(0,0,0,0.7);
+        0 0 6px #444,
+        inset 0 0 6px rgba(0,0,0,0.7);
     }
 
     @keyframes ledPulse {
       0% { opacity: 1; }
-      50% { opacity: 0.65; }
+      50% { opacity: 0.6; }
       100% { opacity: 1; }
     }
 
@@ -132,7 +130,7 @@
       DOUBLE CLICK = EXIT
     </div>
 
-    <!-- LED STATUS -->
+    <!-- SMALL BACK-CORNER STATUS -->
     <div id="onAir" class="led-badge">ON AIR</div>
     <div id="offAir" class="led-badge">OFF AIR</div>
 
