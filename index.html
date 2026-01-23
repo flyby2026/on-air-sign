@@ -27,6 +27,7 @@
       object-fit: contain;
     }
 
+    /* 🔴 ON AIR */
     #onAir {
       position: absolute;
       top: 20px;
@@ -34,14 +35,17 @@
       padding: 12px 24px;
       background: red;
       color: white;
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 28px;
       font-weight: bold;
       border-radius: 8px;
       animation: flash 1s infinite;
+      box-shadow: 0 0 20px red;
       display: none;
       z-index: 10;
     }
 
+    /* ⚫ OFF AIR */
     #offAir {
       position: absolute;
       top: 20px;
@@ -49,6 +53,7 @@
       padding: 12px 24px;
       background: #333;
       color: white;
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 28px;
       font-weight: bold;
       border-radius: 8px;
@@ -62,6 +67,7 @@
       100% { opacity: 1; }
     }
 
+    /* Fullscreen prompt */
     #fullscreenPrompt {
       position: absolute;
       inset: 0;
@@ -70,6 +76,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 32px;
       z-index: 100;
       text-align: center;
@@ -87,26 +94,25 @@
     <div id="onAir">ON AIR</div>
     <div id="offAir">OFF AIR</div>
 
+    <!-- Default image (will be replaced by schedule.js) -->
     <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
   </div>
 
+  <!-- Schedule logic -->
   <script src="schedule.js"></script>
 
   <script>
     const promptOverlay = document.getElementById("fullscreenPrompt");
     const body = document.body;
 
-    // 🔑 FORCE FOCUS (THIS IS THE FIX)
+    /* 🔑 Ensure keyboard focus for ADMIN unlock */
     function ensureFocus() {
       body.focus();
     }
-
     window.addEventListener("load", ensureFocus);
     document.addEventListener("click", ensureFocus);
 
-    // --------------------
-    // FULLSCREEN CONTROLS
-    // --------------------
+    /* 🖱 Single click → fullscreen */
     document.addEventListener("click", () => {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(() => {});
@@ -115,6 +121,7 @@
       }
     });
 
+    /* 🖱 Double click → exit fullscreen */
     document.addEventListener("dblclick", () => {
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
@@ -123,11 +130,10 @@
       }
     });
 
+    /* 🚫 Disable right click */
     document.addEventListener("contextmenu", e => e.preventDefault());
 
-    // --------------------
-    // ADMIN KEY SEQUENCE
-    // --------------------
+    /* 🔐 ADMIN keyboard unlock */
     let keyBuffer = "";
     const SECRET = "ADMIN";
 
