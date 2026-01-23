@@ -92,13 +92,13 @@ const weeklySchedule = {
     { start: 1020, end: 1140, image: "images/SATURDAY Dj Spitfire - Ground Control - 5-7pm.png" },
     { start: 1140, end: 1200, image: "images/SATURDAY Big Don - The regular show - 7-8pm.png" },
     { start: 1200, end: 1260, image: "images/SATURDAY DJ Short Boi - Short Bois Beats - 8-9pm.png" },
-    { start: 1260, end: 1380, image: "images/SATURDAY DJ Bones - The graveyard shift - 9:00-11pm.png" },
-    { start: 1380, end: 1440, image: "images/SATURDAY DJ Plague - the emergency room - 11pm-12am (1).png" }
+    { start: 1260, end: 1380, image: "images/SATURDAY DJ Bones - The graveyard shift - 900-11pm.png" },
+    { start: 1380, end: 1440, image: "images/SATURDAY DJ Plague - the emergency room - 11pm-12am (goes into sunday) (1).png" }
   ],
 
   // SUNDAY (0)
   0: [
-    { start: 0, end: 60, image: "images/SUNDAY DJ Plague - the emergency room - 12am-1am (2).png" },
+    { start: 0, end: 60, image: "images/SUNDAY DJ Plague - the emergency room - 12am-1am (goes into sunday) (2).png" },
     { start: 60, end: 600, image: "images/SUNDAY Open studio 1am-10am.png" },
     { start: 600, end: 780, image: "images/SUNDAY Mia - productions slot - 10am-1pm.png" },
     { start: 780, end: 840, image: "images/SUNDAY Open studio - 1pm-2pm.png" },
