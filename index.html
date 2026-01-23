@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    /* Global font lock */
+    /* =========================
+       GLOBAL STYLE
+    ========================== */
     * {
       font-family: Helvetica, Arial, sans-serif;
     }
@@ -32,71 +34,124 @@
       object-fit: contain;
     }
 
-    /* 🔴 ON AIR */
+    /* =========================
+       FAUX LED EFFECT HELPERS
+    ========================== */
+    .led {
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow:
+        0 0 4px rgba(255,255,255,0.4),
+        0 0 10px currentColor,
+        0 0 20px currentColor;
+    }
+
+    .scanlines::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.04),
+        rgba(255,255,255,0.04) 1px,
+        rgba(0,0,0,0) 2px,
+        rgba(0,0,0,0) 4px
+      );
+      pointer-events: none;
+      border-radius: 10px;
+    }
+
+    /* =========================
+       ON AIR (LED RED)
+    ========================== */
     #onAir {
       position: absolute;
       top: 20px;
       left: 20px;
-      padding: 12px 24px;
-      background: red;
-      color: white;
-      font-size: 28px;
-      font-weight: bold;
-      border-radius: 8px;
-      animation: flash 1s infinite;
-      box-shadow: 0 0 20px red;
+      padding: 14px 28px;
+      background: radial-gradient(circle at center, #ff3b3b, #b30000);
+      color: #fff;
+      font-size: 30px;
+      font-weight: 900;
+      border-radius: 10px;
+      box-shadow:
+        0 0 12px #ff3b3b,
+        inset 0 0 12px rgba(0,0,0,0.6);
+      animation: pulse 1.2s infinite;
       display: none;
       z-index: 10;
     }
 
-    /* ⚫ OFF AIR */
+    /* =========================
+       OFF AIR (LED GRAY)
+    ========================== */
     #offAir {
       position: absolute;
       top: 20px;
       left: 20px;
-      padding: 12px 24px;
-      background: #333;
-      color: white;
+      padding: 14px 28px;
+      background: radial-gradient(circle at center, #555, #222);
+      color: #ddd;
       font-size: 28px;
-      font-weight: bold;
-      border-radius: 8px;
+      font-weight: 800;
+      border-radius: 10px;
+      box-shadow:
+        0 0 6px #666,
+        inset 0 0 10px rgba(0,0,0,0.7);
       display: none;
       z-index: 10;
     }
 
-    @keyframes flash {
-      0% { opacity: 1; }
-      50% { opacity: 0.3; }
-      100% { opacity: 1; }
+    /* =========================
+       LED PULSE
+    ========================== */
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+        box-shadow: 0 0 10px #ff3b3b;
+      }
+      50% {
+        opacity: 0.7;
+        box-shadow: 0 0 24px #ff3b3b;
+      }
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 10px #ff3b3b;
+      }
     }
 
-    /* Fullscreen prompt */
+    /* =========================
+       FULLSCREEN PROMPT
+    ========================== */
     #fullscreenPrompt {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.9);
-      color: white;
+      background: rgba(0,0,0,0.92);
+      color: #ccc;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 32px;
       z-index: 100;
       text-align: center;
+      letter-spacing: 2px;
     }
   </style>
 </head>
 
 <body tabindex="0">
   <div id="container">
+
     <div id="fullscreenPrompt">
       CLICK = ENTER FULLSCREEN<br>
       DOUBLE CLICK = EXIT
     </div>
 
-    <div id="onAir">ON AIR</div>
-    <div id="offAir">OFF AIR</div>
+    <!-- ON / OFF AIR -->
+    <div id="onAir" class="led scanlines">ON AIR</div>
+    <div id="offAir" class="led scanlines">OFF AIR</div>
 
-    <!-- Default image (replaced by schedule.js) -->
+    <!-- Default image -->
     <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
   </div>
 
@@ -107,14 +162,14 @@
     const promptOverlay = document.getElementById("fullscreenPrompt");
     const body = document.body;
 
-    /* 🔑 Ensure keyboard focus for ADMIN unlock */
+    /* Ensure keyboard focus for ADMIN */
     function ensureFocus() {
       body.focus();
     }
     window.addEventListener("load", ensureFocus);
     document.addEventListener("click", ensureFocus);
 
-    /* 🖱 Single click → enter fullscreen */
+    /* Single click → fullscreen */
     document.addEventListener("click", () => {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(() => {});
@@ -123,7 +178,7 @@
       }
     });
 
-    /* 🖱 Double click → exit fullscreen */
+    /* Double click → exit fullscreen */
     document.addEventListener("dblclick", () => {
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
@@ -132,10 +187,10 @@
       }
     });
 
-    /* 🚫 Disable right click */
+    /* Disable right click */
     document.addEventListener("contextmenu", e => e.preventDefault());
 
-    /* 🔐 ADMIN keyboard unlock */
+    /* ADMIN unlock */
     let keyBuffer = "";
     const SECRET = "ADMIN";
 
