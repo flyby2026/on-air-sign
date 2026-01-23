@@ -45,7 +45,7 @@ const weeklySchedule = {
   // WEDNESDAY (3)
   3: [
     { start: 0, end: 780, image: "images/WEDNESDAY OPEN STUDIO - 12AM-1PM.png" },
-    { start: 780, end: 1020, image: "images/WEDNESDAY WIKD TRAINING SLOT - 1-5pm.png" },
+    { start: 780, end: 1020, image: "images/WEDNESDAY WIKD TRAINING SLOT - 1-5pm .png" },
     { start: 1020, end: 1140, image: "images/WEDNESDAY OPEN STUDIO - 5PM-7PM.png" },
     { start: 1140, end: 1200, image: "images/WEDNESDAY WIKD GENERAL MEETING - 7-8pm.png" },
     { start: 1200, end: 1320, image: "images/WEDNESDAY JT MONEY - PAYDAY 8-10PM.png" },
@@ -122,7 +122,6 @@ function fadeToImage(img, newSrc) {
   if (currentImage === newSrc) return;
   img.style.transition = `opacity ${FADE_DURATION}ms`;
   img.style.opacity = 0;
-
   setTimeout(() => {
     img.src = newSrc;
     img.style.opacity = 1;
@@ -136,7 +135,7 @@ function updateImage() {
   const offAir = document.getElementById("offAir");
 
   const now = new Date();
-  const day = now.getDay(); // Automatically resets Sunday → Monday
+  const day = now.getDay();
   const minutesNow = now.getHours() * 60 + now.getMinutes();
 
   onAir.style.display = "none";
