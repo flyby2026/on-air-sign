@@ -74,7 +74,7 @@ const weeklySchedule = {
     { start: 780, end: 960, image: "images/FRIDAY WIKD TRAINING SLOT - 1-4PM.png" },
     { start: 960, end: 1020, image: "images/FRIDAY DJ C-SQD - THE SHOPPING CART - 4-5PM.png" },
     { start: 1020, end: 1140, image: "images/FRIDAY OPEN STUDIO - 5-7PM.png" },
-    { start: 1140, end: 1200, image: "images/FRIDAY DJ Flyby - flyin’ with ryan - 7-8pm 23.png" },
+    { start: 1140, end: 1200, image: "images/FRIDAY DJ Flyby - flyin’ with ryan - 7-8pm no show.png" },
     { start: 1200, end: 1320, image: "images/FRIDAY THE RAVE - 8-10pm.png" },
     { start: 1320, end: 1440, image: "images/FRIDAY DJ Ray - The sound lounge (10pm-12am).png" }
   ],
