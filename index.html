@@ -81,8 +81,7 @@
   <div id="container">
     <div id="fullscreenPrompt">
       CLICK = ENTER FULLSCREEN<br>
-      DOUBLE CLICK = EXIT<br>
-      TRIPLE CLICK = ADMIN
+      DOUBLE CLICK = EXIT
     </div>
 
     <div id="onAir">ON AIR</div>
@@ -94,52 +93,52 @@
   <script src="schedule.js"></script>
 
   <script>
-    const prompt = document.getElementById("fullscreenPrompt");
+    const promptOverlay = document.getElementById("fullscreenPrompt");
 
-    let clickCount = 0;
-    let clickTimer = null;
-    const CLICK_DELAY = 350; // ms
-
+    // --------------------
+    // FULLSCREEN CONTROLS
+    // --------------------
     document.addEventListener("click", () => {
-      clickCount++;
-
-      clearTimeout(clickTimer);
-
-      clickTimer = setTimeout(() => {
-        if (clickCount === 1) {
-          // SINGLE CLICK → ENTER FULLSCREEN
-          if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(() => {});
-            prompt.style.display = "none";
-            document.body.style.cursor = "none";
-          }
-        }
-
-        if (clickCount === 2) {
-          // DOUBLE CLICK → EXIT FULLSCREEN
-          if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
-            prompt.style.display = "flex";
-            document.body.style.cursor = "default";
-          }
-        }
-
-        if (clickCount === 3) {
-          // TRIPLE CLICK → ADMIN
-          const code = prompt("Enter admin code:");
-          if (code === "6969") {
-            window.location.href = "admin.html";
-          } else if (code !== null) {
-            alert("Incorrect code");
-          }
-        }
-
-        clickCount = 0;
-      }, CLICK_DELAY);
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        promptOverlay.style.display = "none";
+        document.body.style.cursor = "none";
+      }
     });
 
-    // Disable right click
+    document.addEventListener("dblclick", () => {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+        promptOverlay.style.display = "flex";
+        document.body.style.cursor = "default";
+      }
+    });
+
     document.addEventListener("contextmenu", e => e.preventDefault());
+
+    // --------------------
+    // ADMIN KEY SEQUENCE
+    // --------------------
+    let keyBuffer = "";
+    const SECRET = "ADMIN";
+
+    document.addEventListener("keydown", (e) => {
+      keyBuffer += e.key.toUpperCase();
+
+      if (!SECRET.startsWith(keyBuffer)) {
+        keyBuffer = "";
+      }
+
+      if (keyBuffer === SECRET) {
+        keyBuffer = "";
+        const code = prompt("Enter admin code:");
+        if (code === "6969") {
+          window.location.href = "admin.html";
+        } else if (code !== null) {
+          alert("Incorrect code");
+        }
+      }
+    });
   </script>
 </body>
 </html>
