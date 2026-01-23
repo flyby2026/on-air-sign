@@ -11,7 +11,8 @@
       background: black;
       height: 100vh;
       overflow: hidden;
-      cursor: pointer;
+      cursor: none;
+      user-select: none;
     }
 
     #container {
@@ -66,11 +67,11 @@
       100% { opacity: 1; }
     }
 
-    /* Fullscreen Prompt */
+    /* Prompt */
     #fullscreenPrompt {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.9);
       color: white;
       display: flex;
       align-items: center;
@@ -84,7 +85,7 @@
 
 <body>
   <div id="container">
-    <div id="fullscreenPrompt">CLICK ANYWHERE TO START</div>
+    <div id="fullscreenPrompt">CLICK TO ENTER · DOUBLE-CLICK TO EXIT</div>
     <div id="onAir">ON AIR</div>
     <div id="offAir">OFF AIR</div>
     <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
@@ -95,16 +96,26 @@
   <script>
     const prompt = document.getElementById("fullscreenPrompt");
 
-    function goFullscreen() {
+    // SINGLE CLICK → ENTER FULLSCREEN
+    document.addEventListener("click", () => {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(() => {});
+        prompt.style.display = "none";
+        document.body.style.cursor = "none";
       }
-      prompt.style.display = "none";
-      document.body.style.cursor = "none";
-    }
+    });
 
-    document.addEventListener("click", goFullscreen);
-    document.addEventListener("keydown", goFullscreen);
+    // DOUBLE CLICK → EXIT FULLSCREEN
+    document.addEventListener("dblclick", () => {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+        prompt.style.display = "flex";
+        document.body.style.cursor = "default";
+      }
+    });
+
+    // Disable right-click
+    document.addEventListener("contextmenu", e => e.preventDefault());
   </script>
 </body>
 </html>
