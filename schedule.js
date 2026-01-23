@@ -1,12 +1,15 @@
-// Fallback image (never black screen)
+// =====================
+// CONFIG
+// =====================
 const FALLBACK_IMAGE = "images/MONDAY OPEN STUDIO - 12AM - 10AM.png";
+const FADE_DURATION = 800; // ms
 
-// Weekly schedule
+// =====================
+// WEEKLY SCHEDULE
+// =====================
 const weeklySchedule = {
 
-  // =====================
   // MONDAY (1)
-  // =====================
   1: [
     { start: 0, end: 600, image: "images/MONDAY OPEN STUDIO - 12AM - 10AM.png" },
     { start: 600, end: 660, image: "images/DJ Spirit - Show your Spirit! (Monday - 10-11 am).png" },
@@ -20,9 +23,7 @@ const weeklySchedule = {
     { start: 1380, end: 1440, image: "images/MONDAY DJ noli- holy cannoli (monday 11pm-12am).png" }
   ],
 
-  // =====================
   // TUESDAY (2)
-  // =====================
   2: [
     { start: 0, end: 60, image: "images/TUESDAY DJ Nine - Nighttimes with Nine (Tuesday 12am - 1am).png" },
     { start: 60, end: 120, image: "images/TUESDAY DJ BLUE - The Sorrow Hour (tuesday 1am-2am).png" },
@@ -41,9 +42,7 @@ const weeklySchedule = {
     { start: 1380, end: 1440, image: "images/TUESDAY DJ Tia - the blue hour (11pm-12am).png" }
   ],
 
-  // =====================
   // WEDNESDAY (3)
-  // =====================
   3: [
     { start: 0, end: 780, image: "images/WEDNESDAY OPEN STUDIO - 12AM-1PM.png" },
     { start: 780, end: 1020, image: "images/WEDNESDAY WIKD TRAINING SLOT - 1-5pm.png" },
@@ -54,9 +53,7 @@ const weeklySchedule = {
     { start: 1380, end: 1440, image: "images/WEDNESDAY MC SALEM - THE WITCHING HOUR 11PM-12AM.png" }
   ],
 
-  // =====================
   // THURSDAY (4)
-  // =====================
   4: [
     { start: 0, end: 60, image: "images/THURSDAY XRZUN - X-TUNES - 12AM-1AM.png" },
     { start: 60, end: 660, image: "images/THURSDAY OPEN STUDIO - 1AM-11AM.png" },
@@ -69,9 +66,7 @@ const weeklySchedule = {
     { start: 1380, end: 1440, image: "images/THURSDAY DJ Rishi - Pretty good music - 11pm-12am.png" }
   ],
 
-  // =====================
   // FRIDAY (5)
-  // =====================
   5: [
     { start: 0, end: 660, image: "images/FRIDAY OPEN STUDIO - 12AM-11AM.png" },
     { start: 660, end: 720, image: "images/FRIDAY DJ Brixtina - Brixieland 11am-12pm.png" },
@@ -82,31 +77,80 @@ const weeklySchedule = {
     { start: 1140, end: 1200, image: "images/FRIDAY DJ Flyby - flyin’ with ryan - 7-8pm.png" },
     { start: 1200, end: 1320, image: "images/FRIDAY THE RAVE - 8-10pm.png" },
     { start: 1320, end: 1440, image: "images/FRIDAY DJ Ray - The sound lounge (10pm-12am).png" }
+  ],
+
+  // SATURDAY (6)
+  6: [
+    { start: 0, end: 60, image: "images/SATURDAY DJ Brixtina - REBELLION - 12am-1am.png" },
+    { start: 60, end: 540, image: "images/SATURDAY Open studio - 1am-9am.png" },
+    { start: 540, end: 660, image: "images/SATURDAY DJ Rishi - Productions Slot - 9-11am.png" },
+    { start: 660, end: 780, image: "images/SATURDAY Open studio - 11am-1pm.png" },
+    { start: 780, end: 840, image: "images/SATURDAY DJ Palomino - Mixtape Round up - 1-2pm.png" },
+    { start: 840, end: 900, image: "images/SATURDAY Open studio - 2pm-3pm.png" },
+    { start: 900, end: 960, image: "images/SATURDAY DJ Meridan - PRIME WMeridian - 3-4pm.png" },
+    { start: 960, end: 1020, image: "images/SATURDAY DJ Plague - The Flight Deck - 4-5pm.png" },
+    { start: 1020, end: 1140, image: "images/SATURDAY Dj Spitfire - Ground Control - 5-7pm.png" },
+    { start: 1140, end: 1200, image: "images/SATURDAY Big Don - The regular show - 7-8pm.png" },
+    { start: 1200, end: 1260, image: "images/SATURDAY DJ Short Boi - Short Bois Beats - 8-9pm.png" },
+    { start: 1260, end: 1380, image: "images/SATURDAY DJ Bones - The graveyard shift - 9:00-11pm.png" },
+    { start: 1380, end: 1440, image: "images/SATURDAY DJ Plague - the emergency room - 11pm-12am (1).png" }
+  ],
+
+  // SUNDAY (0)
+  0: [
+    { start: 0, end: 60, image: "images/SUNDAY DJ Plague - the emergency room - 12am-1am (2).png" },
+    { start: 60, end: 600, image: "images/SUNDAY Open studio 1am-10am.png" },
+    { start: 600, end: 780, image: "images/SUNDAY Mia - productions slot - 10am-1pm.png" },
+    { start: 780, end: 840, image: "images/SUNDAY Open studio - 1pm-2pm.png" },
+    { start: 840, end: 900, image: "images/SUNDAY DJ Psyop - sunday sauce - 2-3pm.png" },
+    { start: 900, end: 960, image: "images/SUNDAY DJ kmooks - sweet release - 3-4pm.png" },
+    { start: 960, end: 1020, image: "images/SUNDAY Dj tornado - outbreak - 4-5pm.png" },
+    { start: 1020, end: 1080, image: "images/SUNDAY Dj old money - fined tuned radio - 5-6pm.png" },
+    { start: 1080, end: 1260, image: "images/SUNDAY Paxton - Productions Slot - 6-9pm.png" },
+    { start: 1260, end: 1320, image: "images/SUNDAY DJ quasar - Disco Galaxy - 9-10pm.png" },
+    { start: 1320, end: 1380, image: "images/SUNDAY Open studio 10pm-11pm.png" },
+    { start: 1380, end: 1440, image: "images/SUNDAY Dj nishi - the interstates - 11pm-12am.png" }
   ]
 };
 
 // =====================
-// CORE LOGIC
+// CORE LOGIC + FADE
 // =====================
+let currentImage = "";
+
+function fadeToImage(img, newSrc) {
+  if (currentImage === newSrc) return;
+  img.style.transition = `opacity ${FADE_DURATION}ms`;
+  img.style.opacity = 0;
+
+  setTimeout(() => {
+    img.src = newSrc;
+    img.style.opacity = 1;
+    currentImage = newSrc;
+  }, FADE_DURATION);
+}
+
 function updateImage() {
   const img = document.getElementById("onAirImage");
   const onAir = document.getElementById("onAir");
   const offAir = document.getElementById("offAir");
 
   const now = new Date();
-  const day = now.getDay();
+  const day = now.getDay(); // Automatically resets Sunday → Monday
   const minutesNow = now.getHours() * 60 + now.getMinutes();
 
-  img.src = FALLBACK_IMAGE;
   onAir.style.display = "none";
   offAir.style.display = "block";
 
   const todaySchedule = weeklySchedule[day];
-  if (!todaySchedule) return;
+  if (!todaySchedule) {
+    fadeToImage(img, FALLBACK_IMAGE);
+    return;
+  }
 
   for (const slot of todaySchedule) {
     if (minutesNow >= slot.start && minutesNow < slot.end) {
-      img.src = slot.image;
+      fadeToImage(img, slot.image);
 
       if (
         slot.image.toUpperCase().includes("OPEN STUDIO") ||
@@ -122,7 +166,10 @@ function updateImage() {
       return;
     }
   }
+
+  fadeToImage(img, FALLBACK_IMAGE);
 }
 
+// INIT
 updateImage();
 setInterval(updateImage, 15000);
