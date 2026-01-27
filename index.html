@@ -76,22 +76,27 @@
       border-radius: 6px;
       color: #fff;
       font-size: 16px;
-      max-width: 600px;
+      max-width: 650px;
       z-index: 40;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    #nowPlaying span.label {
+    #nowPlaying .label {
       color: #00e5ff;
       font-weight: 700;
       margin-right: 6px;
     }
 
-    /* Hide raw widget */
+    /* Completely hide Spinitron widget */
     #spinitronRaw {
-      display: none;
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      height: 0;
+      width: 0;
+      overflow: hidden;
     }
 
     /* FULLSCREEN PROMPT */
@@ -121,13 +126,13 @@
     <div id="onAir" class="status-badge">ON AIR</div>
     <div id="offAir" class="status-badge">OFF AIR</div>
 
-    <!-- CLEAN NOW PLAYING -->
+    <!-- CLEAN OUTPUT -->
     <div id="nowPlaying">
       <span class="label">NOW PLAYING:</span>
       <span id="trackText">Loading…</span>
     </div>
 
-    <!-- Hidden Spinitron widget -->
+    <!-- RAW SPINITRON DATA (HIDDEN) -->
     <div id="spinitronRaw">
       <div class="spinitron-js-widget"
            data-action="now-playing-v2"
@@ -186,33 +191,33 @@
       }
     });
 
-    /* Extract & clean Spinitron text */
+    /* HARD CLEAN SPINITRON PARSE */
     function updateNowPlaying() {
       const raw = document.getElementById("spinitronRaw");
       if (!raw) return;
 
-      let text = raw.innerText
-        .replace(/\s+/g, " ")
-        .trim();
+      // Collect ONLY text nodes that are not timestamps
+      const text = Array.from(raw.querySelectorAll("*"))
+        .map(el => el.textContent.trim())
+        .filter(t =>
+          t &&
+          !/^\d{1,2}:\d{2}/.test(t) &&     // remove times
+          !/(AM|PM)$/i.test(t) &&
+          !/^Now Playing/i.test(t)
+        )
+        .join(" ");
 
       if (!text) return;
 
-      // Remove timestamps like "3:42 PM" or "12:01 AM"
-      text = text.replace(/\b\d{1,2}:\d{2}\s?(AM|PM)\b/i, "").trim();
+      const clean = text
+        .replace(/[–—]/g, "-")
+        .replace(/\s+/g, " ")
+        .trim();
 
-      // Normalize separators (en dash, em dash → hyphen)
-      text = text.replace(/[–—]/g, "-");
-
-      // Ensure format: Artist - Song
-      const parts = text.split(" - ");
-      if (parts.length >= 2) {
-        trackEl.textContent = `${parts[0].trim()} - ${parts.slice(1).join(" - ").trim()}`;
-      } else {
-        trackEl.textContent = text;
-      }
+      trackEl.textContent = clean;
     }
 
-    setInterval(updateNowPlaying, 3000);
+    setInterval(updateNowPlaying, 2000);
   </script>
 </body>
 </html>
