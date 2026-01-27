@@ -17,7 +17,6 @@ body {
   height: 100vh;
   overflow: hidden;
   cursor: none;
-  user-select: none;
 }
 
 #container {
@@ -32,62 +31,37 @@ img {
   object-fit: contain;
 }
 
-/* STATUS BADGE */
-.status-badge {
+/* NOW PLAYING BAR */
+#nowPlaying {
   position: fixed;
-  top: 14px;
-  right: 14px;
-  padding: 6px 14px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  display: none;
+  bottom: 140px; /* 🔼 higher */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  padding: 12px 20px;
+  border-radius: 6px;
+  color: white;
+  font-size: 18px;
+  max-width: 80%;
+  text-align: center;
   z-index: 50;
 }
 
-#onAir {
-  background: #c40000;
-  color: white;
-  box-shadow: 0 0 6px rgba(255,0,0,0.6);
-  animation: pulse 1.2s infinite;
+/* Spinitron cleanup */
+.spinitron-js-widget {
+  color: white !important;
 }
 
-#offAir {
-  background: #333;
-  color: #ccc;
+.spinitron-js-widget * {
+  background: none !important;
+  border: none !important;
 }
 
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.6; }
-  100% { opacity: 1; }
-}
-
-/* NOW PLAYING */
-#nowPlaying {
-  position: fixed;
-  bottom: 96px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.65);
-  padding: 10px 18px;
-  border-radius: 6px;
-  color: white;
-  font-size: 16px;
-  max-width: 75%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  z-index: 40;
-  text-align: center;
-}
-
-#nowPlaying .label {
-  color: #00e5ff;
-  font-weight: 700;
-  margin-right: 6px;
+/* Hide junk */
+.spinitron-js-widget .spinitron-time,
+.spinitron-js-widget .spinitron-label,
+.spinitron-js-widget img {
+  display: none !important;
 }
 
 /* FULLSCREEN PROMPT */
@@ -101,7 +75,6 @@ img {
   justify-content: center;
   font-size: 32px;
   z-index: 100;
-  text-align: center;
 }
 </style>
 </head>
@@ -114,76 +87,36 @@ img {
     DOUBLE CLICK = EXIT
   </div>
 
-  <div id="onAir" class="status-badge">ON AIR</div>
-  <div id="offAir" class="status-badge">OFF AIR</div>
-
+  <!-- NOW PLAYING -->
   <div id="nowPlaying">
-    <span class="label">NOW PLAYING:</span>
-    <span id="trackText">Waiting for spin…</span>
+    <div class="spinitron-js-widget"
+         data-action="now-playing-v2"
+         data-station="WIKD"
+         data-num="1"
+         data-sharing="0"
+         data-cover="0">
+    </div>
   </div>
 
   <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
 </div>
 
+<script async src="https://spinitron.com/static/js/widget.js"></script>
 <script src="schedule.js"></script>
 
 <script>
-const trackEl = document.getElementById("trackText");
-
-/* === SPINITRON JSONP VIA WIDGET FEED === */
-function spinitronCallback(data) {
-  if (!data || !data.now_playing) return;
-
-  const spin = data.now_playing;
-  if (!spin.artist || !spin.song) return;
-
-  trackEl.textContent = `${spin.artist} - ${spin.song}`;
-}
-
-function loadNowPlaying() {
-  const old = document.getElementById("spinScript");
-  if (old) old.remove();
-
-  const script = document.createElement("script");
-  script.id = "spinScript";
-  script.src =
-    "https://spinitron.com/now-playing-v2/WIKD.jsonp?callback=spinitronCallback";
-  document.body.appendChild(script);
-}
-
-loadNowPlaying();
-setInterval(loadNowPlaying, 30000);
-
-/* FULLSCREEN */
+/* Fullscreen */
 document.addEventListener("click", () => {
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
+    document.documentElement.requestFullscreen();
     document.getElementById("fullscreenPrompt").style.display = "none";
-    document.body.style.cursor = "none";
   }
 });
 
 document.addEventListener("dblclick", () => {
   if (document.fullscreenElement) {
-    document.exitFullscreen().catch(() => {});
+    document.exitFullscreen();
     document.getElementById("fullscreenPrompt").style.display = "flex";
-    document.body.style.cursor = "default";
-  }
-});
-
-document.addEventListener("contextmenu", e => e.preventDefault());
-
-/* ADMIN */
-let keyBuffer = "";
-const SECRET = "ADMIN";
-
-window.addEventListener("keydown", (e) => {
-  keyBuffer += e.key.toUpperCase();
-  if (!SECRET.startsWith(keyBuffer)) keyBuffer = "";
-  if (keyBuffer === SECRET) {
-    keyBuffer = "";
-    const code = prompt("Enter admin code:");
-    if (code === "6969") window.location.href = "admin.html";
   }
 });
 </script>
