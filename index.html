@@ -32,7 +32,9 @@ img {
   object-fit: contain;
 }
 
-/* STATUS BADGE */
+/* =========================
+   STATUS BADGE
+========================= */
 .status-badge {
   position: fixed;
   top: 14px;
@@ -66,7 +68,9 @@ img {
   100% { opacity: 1; }
 }
 
-/* NOW PLAYING */
+/* =========================
+   NOW PLAYING
+========================= */
 #nowPlaying {
   position: fixed;
   bottom: 16px;
@@ -76,7 +80,7 @@ img {
   border-radius: 6px;
   color: white;
   font-size: 16px;
-  max-width: 650px;
+  max-width: 700px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -89,17 +93,9 @@ img {
   margin-right: 6px;
 }
 
-/* Hidden Spinitron widget */
-#spinitronRaw {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  height: 0;
-  width: 0;
-  overflow: hidden;
-}
-
-/* FULLSCREEN PROMPT */
+/* =========================
+   FULLSCREEN PROMPT
+========================= */
 #fullscreenPrompt {
   position: absolute;
   inset: 0;
@@ -123,42 +119,57 @@ img {
     DOUBLE CLICK = EXIT
   </div>
 
+  <!-- STATUS -->
   <div id="onAir" class="status-badge">ON AIR</div>
   <div id="offAir" class="status-badge">OFF AIR</div>
 
-  <!-- NOW PLAYING OUTPUT -->
+  <!-- NOW PLAYING -->
   <div id="nowPlaying">
     <span class="label">NOW PLAYING:</span>
-    <span id="trackText">Waiting for track…</span>
+    <span id="trackText">Fetching track…</span>
   </div>
 
-  <!-- RAW SPINITRON -->
-  <div id="spinitronRaw">
-    <div class="spinitron-js-widget"
-         data-action="now-playing-v2"
-         data-station="WIKD"
-         data-num="1"
-         data-sharing="0"
-         data-cover="0">
-    </div>
-  </div>
-
+  <!-- SHOW IMAGE -->
   <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
 </div>
 
-<script async src="https://spinitron.com/static/js/widget.js"></script>
+<!-- YOUR SCHEDULE LOGIC -->
 <script src="schedule.js"></script>
 
 <script>
-const body = document.body;
-const promptOverlay = document.getElementById("fullscreenPrompt");
+/* =========================
+   SPINITRON JSONP
+========================= */
 const trackEl = document.getElementById("trackText");
 
-/* Fullscreen logic */
+function handleSpin(data) {
+  if (!data || !data.items || !data.items.length) return;
+
+  const spin = data.items[0];
+  if (!spin.artist || !spin.song) return;
+
+  trackEl.textContent = `${spin.artist} - ${spin.song}`;
+}
+
+function fetchNowPlaying() {
+  const script = document.createElement("script");
+  script.src =
+    "https://spinitron.com/api/spins?station=WIKD&count=1&format=jsonp&callback=handleSpin";
+  document.body.appendChild(script);
+
+  setTimeout(() => script.remove(), 5000);
+}
+
+fetchNowPlaying();
+setInterval(fetchNowPlaying, 30000);
+
+/* =========================
+   FULLSCREEN CONTROL
+========================= */
 document.addEventListener("click", () => {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().catch(() => {});
-    promptOverlay.style.display = "none";
+    document.getElementById("fullscreenPrompt").style.display = "none";
     document.body.style.cursor = "none";
   }
 });
@@ -166,16 +177,19 @@ document.addEventListener("click", () => {
 document.addEventListener("dblclick", () => {
   if (document.fullscreenElement) {
     document.exitFullscreen().catch(() => {});
-    promptOverlay.style.display = "flex";
+    document.getElementById("fullscreenPrompt").style.display = "flex";
     document.body.style.cursor = "default";
   }
 });
 
 document.addEventListener("contextmenu", e => e.preventDefault());
 
-/* ADMIN unlock */
+/* =========================
+   ADMIN UNLOCK
+========================= */
 let keyBuffer = "";
 const SECRET = "ADMIN";
+
 window.addEventListener("keydown", (e) => {
   keyBuffer += e.key.toUpperCase();
   if (!SECRET.startsWith(keyBuffer)) keyBuffer = "";
@@ -185,41 +199,6 @@ window.addEventListener("keydown", (e) => {
     if (code === "6969") window.location.href = "admin.html";
   }
 });
-
-/* === SPINITRON OBSERVER (THE FIX) === */
-function parseNowPlaying() {
-  const raw = document.getElementById("spinitronRaw");
-  if (!raw) return;
-
-  let text = raw.innerText
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (!text) return;
-
-  // Remove timestamps
-  text = text.replace(/\b\d{1,2}:\d{2}\s?(AM|PM)\b/gi, "").trim();
-
-  // Normalize dashes
-  text = text.replace(/[–—]/g, "-");
-
-  // Extract Artist - Song
-  const match = text.match(/(.+?)\s-\s(.+)/);
-  if (!match) return;
-
-  trackEl.textContent = `${match[1].trim()} - ${match[2].trim()}`;
-}
-
-/* Observe DOM changes instead of guessing timing */
-const observer = new MutationObserver(parseNowPlaying);
-observer.observe(document.getElementById("spinitronRaw"), {
-  childList: true,
-  subtree: true,
-  characterData: true
-});
-
-/* Fallback poll (safety net) */
-setInterval(parseNowPlaying, 3000);
 </script>
 </body>
 </html>
