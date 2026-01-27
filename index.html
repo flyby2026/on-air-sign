@@ -70,7 +70,7 @@
     }
 
     /* =========================
-       NOW PLAYING WIDGET
+       NOW PLAYING (MINIMAL)
     ========================== */
     #nowPlaying {
       position: fixed;
@@ -81,17 +81,34 @@
       border-radius: 6px;
       color: #fff;
       font-size: 16px;
-      max-width: 420px;
+      max-width: 500px;
       z-index: 40;
     }
 
-    #nowPlaying a {
+    /* Prefix label */
+    #nowPlaying::before {
+      content: "NOW PLAYING: ";
+      font-weight: 700;
+      letter-spacing: 1px;
       color: #00e5ff;
-      text-decoration: none;
     }
 
-    #nowPlaying .spinitron-js-widget {
-      line-height: 1.3;
+    /* Hide everything except the track title */
+    #nowPlaying .spinitron-js-widget * {
+      display: none;
+    }
+
+    /* Show only the song title */
+    #nowPlaying .spinitron-js-widget .track {
+      display: inline;
+      font-weight: 500;
+    }
+
+    /* Remove links / styling noise */
+    #nowPlaying a {
+      color: inherit;
+      text-decoration: none;
+      pointer-events: none;
     }
 
     /* =========================
@@ -124,7 +141,7 @@
     <div id="onAir" class="status-badge">ON AIR</div>
     <div id="offAir" class="status-badge">OFF AIR</div>
 
-    <!-- NOW PLAYING (SPINITRON) -->
+    <!-- NOW PLAYING -->
     <div id="nowPlaying">
       <div class="spinitron-js-widget"
            data-action="now-playing-v2"
@@ -139,7 +156,7 @@
     <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
   </div>
 
-  <!-- Spinitron widget loader -->
+  <!-- Spinitron widget -->
   <script async src="https://spinitron.com/static/js/widget.js"></script>
 
   <!-- Schedule logic -->
