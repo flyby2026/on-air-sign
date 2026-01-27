@@ -66,7 +66,7 @@
       100% { opacity: 1; }
     }
 
-    /* NOW PLAYING */
+    /* NOW PLAYING (ARTIST - SONG ONLY) */
     #nowPlaying {
       position: fixed;
       bottom: 16px;
@@ -83,13 +83,7 @@
       text-overflow: ellipsis;
     }
 
-    #nowPlaying .label {
-      color: #00e5ff;
-      font-weight: 700;
-      margin-right: 6px;
-    }
-
-    /* Completely hide Spinitron widget */
+    /* Hide raw widget completely */
     #spinitronRaw {
       position: absolute;
       opacity: 0;
@@ -126,13 +120,12 @@
     <div id="onAir" class="status-badge">ON AIR</div>
     <div id="offAir" class="status-badge">OFF AIR</div>
 
-    <!-- CLEAN OUTPUT -->
+    <!-- ARTIST - SONG ONLY -->
     <div id="nowPlaying">
-      <span class="label">NOW PLAYING:</span>
       <span id="trackText">Loading…</span>
     </div>
 
-    <!-- RAW SPINITRON DATA (HIDDEN) -->
+    <!-- RAW SPINITRON DATA -->
     <div id="spinitronRaw">
       <div class="spinitron-js-widget"
            data-action="now-playing-v2"
@@ -191,26 +184,26 @@
       }
     });
 
-    /* HARD CLEAN SPINITRON PARSE */
+    /* STRICT PARSER: ONLY Artist - Song */
     function updateNowPlaying() {
       const raw = document.getElementById("spinitronRaw");
       if (!raw) return;
 
-      // Collect ONLY text nodes that are not timestamps
-      const text = Array.from(raw.querySelectorAll("*"))
+      const candidates = Array.from(raw.querySelectorAll("*"))
         .map(el => el.textContent.trim())
-        .filter(t =>
-          t &&
-          !/^\d{1,2}:\d{2}/.test(t) &&     // remove times
-          !/(AM|PM)$/i.test(t) &&
-          !/^Now Playing/i.test(t)
-        )
-        .join(" ");
+        .filter(text =>
+          text &&
+          text.includes("-") &&
+          !/^\d{1,2}:\d{2}/.test(text) &&
+          !/(AM|PM)$/i.test(text)
+        );
 
-      if (!text) return;
+      if (!candidates.length) return;
 
-      const clean = text
+      // Normalize dash + spacing
+      const clean = candidates[0]
         .replace(/[–—]/g, "-")
+        .replace(/\s*-\s*/g, " - ")
         .replace(/\s+/g, " ")
         .trim();
 
