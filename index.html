@@ -1,216 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>WIKD Now On Air</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>WIKD On Air</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      font-family: Helvetica, Arial, sans-serif;
-      box-sizing: border-box;
-    }
+<style>
+* {
+  font-family: Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      background: black;
-      height: 100vh;
-      overflow: hidden;
-      cursor: none;
-      user-select: none;
-    }
+body {
+  margin: 0;
+  background: black;
+  height: 100vh;
+  overflow: hidden;
+  cursor: none;
+  user-select: none;
+}
 
-    #container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
+#container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
-    /* STATUS BADGE */
-    .status-badge {
-      position: fixed;
-      top: 14px;
-      right: 14px;
-      padding: 6px 14px;
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      display: none;
-      z-index: 50;
-      pointer-events: none;
-    }
+/* STATUS BADGE */
+.status-badge {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: none;
+  z-index: 50;
+  pointer-events: none;
+}
 
-    #onAir {
-      background: #c40000;
-      color: #fff;
-      box-shadow: 0 0 6px rgba(255,0,0,0.6);
-      animation: pulse 1.2s infinite;
-    }
+#onAir {
+  background: #c40000;
+  color: white;
+  box-shadow: 0 0 6px rgba(255,0,0,0.6);
+  animation: pulse 1.2s infinite;
+}
 
-    #offAir {
-      background: #333;
-      color: #ccc;
-    }
+#offAir {
+  background: #333;
+  color: #ccc;
+}
 
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.6; }
-      100% { opacity: 1; }
-    }
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
 
-    /* NOW PLAYING (ARTIST - SONG ONLY) */
-    #nowPlaying {
-      position: fixed;
-      bottom: 16px;
-      left: 16px;
-      background: rgba(0,0,0,0.65);
-      padding: 10px 14px;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 16px;
-      max-width: 650px;
-      z-index: 40;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+/* NOW PLAYING */
+#nowPlaying {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(0,0,0,0.65);
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  max-width: 650px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 40;
+}
 
-    /* Hide raw widget completely */
-    #spinitronRaw {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-      height: 0;
-      width: 0;
-      overflow: hidden;
-    }
+#nowPlaying .label {
+  color: #00e5ff;
+  font-weight: 700;
+  margin-right: 6px;
+}
 
-    /* FULLSCREEN PROMPT */
-    #fullscreenPrompt {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.9);
-      color: #ccc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      z-index: 100;
-      text-align: center;
-    }
-  </style>
+/* Hide raw widget completely */
+#spinitronRaw {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+/* FULLSCREEN PROMPT */
+#fullscreenPrompt {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  z-index: 100;
+  text-align: center;
+}
+</style>
 </head>
 
 <body tabindex="0">
-  <div id="container">
+<div id="container">
 
-    <div id="fullscreenPrompt">
-      CLICK = ENTER FULLSCREEN<br>
-      DOUBLE CLICK = EXIT
-    </div>
-
-    <div id="onAir" class="status-badge">ON AIR</div>
-    <div id="offAir" class="status-badge">OFF AIR</div>
-
-    <!-- ARTIST - SONG ONLY -->
-    <div id="nowPlaying">
-      <span id="trackText">Loading…</span>
-    </div>
-
-    <!-- RAW SPINITRON DATA -->
-    <div id="spinitronRaw">
-      <div class="spinitron-js-widget"
-           data-action="now-playing-v2"
-           data-station="WIKD"
-           data-num="1"
-           data-sharing="0"
-           data-cover="0">
-      </div>
-    </div>
-
-    <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
+  <div id="fullscreenPrompt">
+    CLICK = ENTER FULLSCREEN<br>
+    DOUBLE CLICK = EXIT
   </div>
 
-  <script async src="https://spinitron.com/static/js/widget.js"></script>
-  <script src="schedule.js"></script>
+  <div id="onAir" class="status-badge">ON AIR</div>
+  <div id="offAir" class="status-badge">OFF AIR</div>
 
-  <script>
-    const body = document.body;
-    const promptOverlay = document.getElementById("fullscreenPrompt");
-    const trackEl = document.getElementById("trackText");
+  <!-- NOW PLAYING OUTPUT -->
+  <div id="nowPlaying">
+    <span class="label">NOW PLAYING:</span>
+    <span id="trackText">Loading…</span>
+  </div>
 
-    function ensureFocus() {
-      body.focus();
-    }
-    window.addEventListener("load", ensureFocus);
-    document.addEventListener("click", ensureFocus);
+  <!-- HIDDEN SPINITRON SOURCE -->
+  <div id="spinitronRaw">
+    <div class="spinitron-js-widget"
+         data-action="now-playing-v2"
+         data-station="WIKD"
+         data-num="1"
+         data-sharing="0"
+         data-cover="0">
+    </div>
+  </div>
 
-    document.addEventListener("click", () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-        promptOverlay.style.display = "none";
-        document.body.style.cursor = "none";
-      }
-    });
+  <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
+</div>
 
-    document.addEventListener("dblclick", () => {
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
-        promptOverlay.style.display = "flex";
-        document.body.style.cursor = "default";
-      }
-    });
+<script async src="https://spinitron.com/static/js/widget.js"></script>
+<script src="schedule.js"></script>
 
-    document.addEventListener("contextmenu", e => e.preventDefault());
+<script>
+const body = document.body;
+const promptOverlay = document.getElementById("fullscreenPrompt");
+const trackEl = document.getElementById("trackText");
 
-    /* ADMIN unlock */
-    let keyBuffer = "";
-    const SECRET = "ADMIN";
-    window.addEventListener("keydown", (e) => {
-      keyBuffer += e.key.toUpperCase();
-      if (!SECRET.startsWith(keyBuffer)) keyBuffer = "";
-      if (keyBuffer === SECRET) {
-        keyBuffer = "";
-        const code = prompt("Enter admin code:");
-        if (code === "6969") window.location.href = "admin.html";
-      }
-    });
+/* Keep focus */
+function ensureFocus() {
+  body.focus();
+}
+window.addEventListener("load", ensureFocus);
+document.addEventListener("click", ensureFocus);
 
-    /* STRICT PARSER: ONLY Artist - Song */
-    function updateNowPlaying() {
-      const raw = document.getElementById("spinitronRaw");
-      if (!raw) return;
+/* Fullscreen controls */
+document.addEventListener("click", () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+    promptOverlay.style.display = "none";
+    document.body.style.cursor = "none";
+  }
+});
 
-      const candidates = Array.from(raw.querySelectorAll("*"))
-        .map(el => el.textContent.trim())
-        .filter(text =>
-          text &&
-          text.includes("-") &&
-          !/^\d{1,2}:\d{2}/.test(text) &&
-          !/(AM|PM)$/i.test(text)
-        );
+document.addEventListener("dblclick", () => {
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+    promptOverlay.style.display = "flex";
+    document.body.style.cursor = "default";
+  }
+});
 
-      if (!candidates.length) return;
+document.addEventListener("contextmenu", e => e.preventDefault());
 
-      // Normalize dash + spacing
-      const clean = candidates[0]
-        .replace(/[–—]/g, "-")
-        .replace(/\s*-\s*/g, " - ")
-        .replace(/\s+/g, " ")
-        .trim();
+/* ADMIN unlock */
+let keyBuffer = "";
+const SECRET = "ADMIN";
+window.addEventListener("keydown", (e) => {
+  keyBuffer += e.key.toUpperCase();
+  if (!SECRET.startsWith(keyBuffer)) keyBuffer = "";
+  if (keyBuffer === SECRET) {
+    keyBuffer = "";
+    const code = prompt("Enter admin code:");
+    if (code === "6969") window.location.href = "admin.html";
+  }
+});
 
-      trackEl.textContent = clean;
-    }
+/* Extract Artist - Song safely */
+function updateNowPlaying() {
+  const raw = document.getElementById("spinitronRaw");
+  if (!raw) return;
 
-    setInterval(updateNowPlaying, 2000);
-  </script>
+  let text = raw.innerText
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!text) return;
+
+  /* Remove timestamps */
+  text = text.replace(/\b\d{1,2}:\d{2}\s?(AM|PM)\b/gi, "").trim();
+
+  /* Normalize dashes */
+  text = text.replace(/[–—]/g, "-");
+
+  /* Extract Artist - Song */
+  const match = text.match(/(.+?)\s-\s(.+)/);
+  if (!match) return;
+
+  trackEl.textContent = `${match[1].trim()} - ${match[2].trim()}`;
+}
+
+setInterval(updateNowPlaying, 2000);
+</script>
 </body>
 </html>
