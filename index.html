@@ -76,14 +76,14 @@
       border-radius: 6px;
       color: #fff;
       font-size: 16px;
-      max-width: 520px;
+      max-width: 600px;
       z-index: 40;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    #nowPlaying span {
+    #nowPlaying span.label {
       color: #00e5ff;
       font-weight: 700;
       margin-right: 6px;
@@ -121,10 +121,10 @@
     <div id="onAir" class="status-badge">ON AIR</div>
     <div id="offAir" class="status-badge">OFF AIR</div>
 
-    <!-- Clean output -->
+    <!-- CLEAN NOW PLAYING -->
     <div id="nowPlaying">
-      <span>NOW PLAYING:</span>
-      <span id="trackTitle">Loading…</span>
+      <span class="label">NOW PLAYING:</span>
+      <span id="trackText">Loading…</span>
     </div>
 
     <!-- Hidden Spinitron widget -->
@@ -147,7 +147,7 @@
   <script>
     const body = document.body;
     const promptOverlay = document.getElementById("fullscreenPrompt");
-    const trackEl = document.getElementById("trackTitle");
+    const trackEl = document.getElementById("trackText");
 
     function ensureFocus() {
       body.focus();
@@ -186,19 +186,29 @@
       }
     });
 
-    /* Extract song title safely */
+    /* Extract & clean Spinitron text */
     function updateNowPlaying() {
       const raw = document.getElementById("spinitronRaw");
       if (!raw) return;
 
-      const text = raw.innerText
+      let text = raw.innerText
         .replace(/\s+/g, " ")
         .trim();
 
-      if (text.length > 0) {
-        // Remove artist if present (usually "Artist – Song")
-        const parts = text.split(" – ");
-        trackEl.textContent = parts.length > 1 ? parts[1] : parts[0];
+      if (!text) return;
+
+      // Remove timestamps like "3:42 PM" or "12:01 AM"
+      text = text.replace(/\b\d{1,2}:\d{2}\s?(AM|PM)\b/i, "").trim();
+
+      // Normalize separators (en dash, em dash → hyphen)
+      text = text.replace(/[–—]/g, "-");
+
+      // Ensure format: Artist - Song
+      const parts = text.split(" - ");
+      if (parts.length >= 2) {
+        trackEl.textContent = `${parts[0].trim()} - ${parts.slice(1).join(" - ").trim()}`;
+      } else {
+        trackEl.textContent = text;
       }
     }
 
