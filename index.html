@@ -69,12 +69,12 @@ img {
 }
 
 /* =========================
-   NOW PLAYING (CENTERED)
+   NOW PLAYING (CENTERED & HIGHER)
 ========================= */
 #nowPlaying {
   position: fixed;
-  bottom: 64px;                 /* 🔼 slightly higher */
-  left: 50%;                    /* ⬅️➡️ center horizontally */
+  bottom: 96px;                 /* 🔼 moved higher */
+  left: 50%;
   transform: translateX(-50%);
   background: rgba(0,0,0,0.65);
   padding: 10px 18px;
@@ -146,10 +146,8 @@ const trackEl = document.getElementById("trackText");
 
 function handleSpin(data) {
   if (!data || !data.items || !data.items.length) return;
-
   const spin = data.items[0];
   if (!spin.artist || !spin.song) return;
-
   trackEl.textContent = `${spin.artist} - ${spin.song}`;
 }
 
@@ -158,7 +156,6 @@ function fetchNowPlaying() {
   script.src =
     "https://spinitron.com/api/spins?station=WIKD&count=1&format=jsonp&callback=handleSpin";
   document.body.appendChild(script);
-
   setTimeout(() => script.remove(), 5000);
 }
 
