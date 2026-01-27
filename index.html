@@ -32,9 +32,7 @@ img {
   object-fit: contain;
 }
 
-/* =========================
-   STATUS BADGE
-========================= */
+/* STATUS BADGE */
 .status-badge {
   position: fixed;
   top: 14px;
@@ -47,7 +45,6 @@ img {
   text-transform: uppercase;
   display: none;
   z-index: 50;
-  pointer-events: none;
 }
 
 #onAir {
@@ -68,12 +65,10 @@ img {
   100% { opacity: 1; }
 }
 
-/* =========================
-   NOW PLAYING (CENTERED & HIGHER)
-========================= */
+/* NOW PLAYING */
 #nowPlaying {
   position: fixed;
-  bottom: 96px;                 /* 🔼 moved higher */
+  bottom: 96px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0,0,0,0.65);
@@ -95,9 +90,7 @@ img {
   margin-right: 6px;
 }
 
-/* =========================
-   FULLSCREEN PROMPT
-========================= */
+/* FULLSCREEN PROMPT */
 #fullscreenPrompt {
   position: absolute;
   inset: 0;
@@ -113,7 +106,7 @@ img {
 </style>
 </head>
 
-<body tabindex="0">
+<body>
 <div id="container">
 
   <div id="fullscreenPrompt">
@@ -121,50 +114,47 @@ img {
     DOUBLE CLICK = EXIT
   </div>
 
-  <!-- STATUS -->
   <div id="onAir" class="status-badge">ON AIR</div>
   <div id="offAir" class="status-badge">OFF AIR</div>
 
-  <!-- NOW PLAYING -->
   <div id="nowPlaying">
     <span class="label">NOW PLAYING:</span>
-    <span id="trackText">Fetching track…</span>
+    <span id="trackText">Waiting for spin…</span>
   </div>
 
-  <!-- SHOW IMAGE -->
   <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
 </div>
 
-<!-- SCHEDULE -->
 <script src="schedule.js"></script>
 
 <script>
-/* =========================
-   SPINITRON JSONP
-========================= */
 const trackEl = document.getElementById("trackText");
 
-function handleSpin(data) {
-  if (!data || !data.items || !data.items.length) return;
-  const spin = data.items[0];
+/* === SPINITRON JSONP VIA WIDGET FEED === */
+function spinitronCallback(data) {
+  if (!data || !data.now_playing) return;
+
+  const spin = data.now_playing;
   if (!spin.artist || !spin.song) return;
+
   trackEl.textContent = `${spin.artist} - ${spin.song}`;
 }
 
-function fetchNowPlaying() {
+function loadNowPlaying() {
+  const old = document.getElementById("spinScript");
+  if (old) old.remove();
+
   const script = document.createElement("script");
+  script.id = "spinScript";
   script.src =
-    "https://spinitron.com/api/spins?station=WIKD&count=1&format=jsonp&callback=handleSpin";
+    "https://spinitron.com/now-playing-v2/WIKD.jsonp?callback=spinitronCallback";
   document.body.appendChild(script);
-  setTimeout(() => script.remove(), 5000);
 }
 
-fetchNowPlaying();
-setInterval(fetchNowPlaying, 30000);
+loadNowPlaying();
+setInterval(loadNowPlaying, 30000);
 
-/* =========================
-   FULLSCREEN CONTROL
-========================= */
+/* FULLSCREEN */
 document.addEventListener("click", () => {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().catch(() => {});
@@ -183,9 +173,7 @@ document.addEventListener("dblclick", () => {
 
 document.addEventListener("contextmenu", e => e.preventDefault());
 
-/* =========================
-   ADMIN UNLOCK
-========================= */
+/* ADMIN */
 let keyBuffer = "";
 const SECRET = "ADMIN";
 
