@@ -17,6 +17,7 @@ body {
   height: 100vh;
   overflow: hidden;
   cursor: none;
+  user-select: none;
 }
 
 #container {
@@ -31,40 +32,45 @@ img {
   object-fit: contain;
 }
 
-/* NOW PLAYING BAR */
-#nowPlaying {
+/* =========================
+   STATUS BADGE
+========================= */
+.status-badge {
   position: fixed;
-  bottom: 140px; /* 🔼 higher */
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.7);
-  padding: 12px 20px;
-  border-radius: 6px;
-  color: white;
-  font-size: 18px;
-  max-width: 80%;
-  text-align: center;
+  top: 14px;
+  right: 14px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: none;
   z-index: 50;
+  pointer-events: none;
 }
 
-/* Spinitron cleanup */
-.spinitron-js-widget {
-  color: white !important;
+#onAir {
+  background: #c40000;
+  color: white;
+  box-shadow: 0 0 6px rgba(255,0,0,0.6);
+  animation: pulse 1.2s infinite;
 }
 
-.spinitron-js-widget * {
-  background: none !important;
-  border: none !important;
+#offAir {
+  background: #333;
+  color: #ccc;
 }
 
-/* Hide junk */
-.spinitron-js-widget .spinitron-time,
-.spinitron-js-widget .spinitron-label,
-.spinitron-js-widget img {
-  display: none !important;
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
 }
 
-/* FULLSCREEN PROMPT */
+/* =========================
+   FULLSCREEN PROMPT
+========================= */
 #fullscreenPrompt {
   position: absolute;
   inset: 0;
@@ -75,11 +81,12 @@ img {
   justify-content: center;
   font-size: 32px;
   z-index: 100;
+  text-align: center;
 }
 </style>
 </head>
 
-<body>
+<body tabindex="0">
 <div id="container">
 
   <div id="fullscreenPrompt">
@@ -87,36 +94,52 @@ img {
     DOUBLE CLICK = EXIT
   </div>
 
-  <!-- NOW PLAYING -->
-  <div id="nowPlaying">
-    <div class="spinitron-js-widget"
-         data-action="now-playing-v2"
-         data-station="WIKD"
-         data-num="1"
-         data-sharing="0"
-         data-cover="0">
-    </div>
-  </div>
+  <!-- STATUS -->
+  <div id="onAir" class="status-badge">ON AIR</div>
+  <div id="offAir" class="status-badge">OFF AIR</div>
 
+  <!-- SHOW IMAGE -->
   <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
 </div>
 
-<script async src="https://spinitron.com/static/js/widget.js"></script>
+<!-- SCHEDULE LOGIC -->
 <script src="schedule.js"></script>
 
 <script>
-/* Fullscreen */
+/* =========================
+   FULLSCREEN CONTROL
+========================= */
 document.addEventListener("click", () => {
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
+    document.documentElement.requestFullscreen().catch(() => {});
     document.getElementById("fullscreenPrompt").style.display = "none";
+    document.body.style.cursor = "none";
   }
 });
 
 document.addEventListener("dblclick", () => {
   if (document.fullscreenElement) {
-    document.exitFullscreen();
+    document.exitFullscreen().catch(() => {});
     document.getElementById("fullscreenPrompt").style.display = "flex";
+    document.body.style.cursor = "default";
+  }
+});
+
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+/* =========================
+   ADMIN UNLOCK
+========================= */
+let keyBuffer = "";
+const SECRET = "ADMIN";
+
+window.addEventListener("keydown", (e) => {
+  keyBuffer += e.key.toUpperCase();
+  if (!SECRET.startsWith(keyBuffer)) keyBuffer = "";
+  if (keyBuffer === SECRET) {
+    keyBuffer = "";
+    const code = prompt("Enter admin code:");
+    if (code === "6969") window.location.href = "admin.html";
   }
 });
 </script>
