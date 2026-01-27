@@ -32,9 +32,7 @@
       object-fit: contain;
     }
 
-    /* =========================
-       SMALL CORNER STATUS
-    ========================== */
+    /* STATUS BADGE */
     .status-badge {
       position: fixed;
       top: 14px;
@@ -60,7 +58,6 @@
     #offAir {
       background: #333;
       color: #ccc;
-      box-shadow: 0 0 4px rgba(255,255,255,0.2);
     }
 
     @keyframes pulse {
@@ -69,9 +66,7 @@
       100% { opacity: 1; }
     }
 
-    /* =========================
-       NOW PLAYING (MINIMAL)
-    ========================== */
+    /* NOW PLAYING */
     #nowPlaying {
       position: fixed;
       bottom: 16px;
@@ -81,39 +76,25 @@
       border-radius: 6px;
       color: #fff;
       font-size: 16px;
-      max-width: 500px;
+      max-width: 520px;
       z-index: 40;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    /* Prefix label */
-    #nowPlaying::before {
-      content: "NOW PLAYING: ";
-      font-weight: 700;
-      letter-spacing: 1px;
+    #nowPlaying span {
       color: #00e5ff;
+      font-weight: 700;
+      margin-right: 6px;
     }
 
-    /* Hide everything except the track title */
-    #nowPlaying .spinitron-js-widget * {
+    /* Hide raw widget */
+    #spinitronRaw {
       display: none;
     }
 
-    /* Show only the song title */
-    #nowPlaying .spinitron-js-widget .track {
-      display: inline;
-      font-weight: 500;
-    }
-
-    /* Remove links / styling noise */
-    #nowPlaying a {
-      color: inherit;
-      text-decoration: none;
-      pointer-events: none;
-    }
-
-    /* =========================
-       FULLSCREEN PROMPT
-    ========================== */
+    /* FULLSCREEN PROMPT */
     #fullscreenPrompt {
       position: absolute;
       inset: 0;
@@ -137,12 +118,17 @@
       DOUBLE CLICK = EXIT
     </div>
 
-    <!-- STATUS -->
     <div id="onAir" class="status-badge">ON AIR</div>
     <div id="offAir" class="status-badge">OFF AIR</div>
 
-    <!-- NOW PLAYING -->
+    <!-- Clean output -->
     <div id="nowPlaying">
+      <span>NOW PLAYING:</span>
+      <span id="trackTitle">Loading…</span>
+    </div>
+
+    <!-- Hidden Spinitron widget -->
+    <div id="spinitronRaw">
       <div class="spinitron-js-widget"
            data-action="now-playing-v2"
            data-station="WIKD"
@@ -152,19 +138,16 @@
       </div>
     </div>
 
-    <!-- DEFAULT IMAGE -->
     <img id="onAirImage" src="images/MONDAY OPEN STUDIO - 12AM - 10AM.png">
   </div>
 
-  <!-- Spinitron widget -->
   <script async src="https://spinitron.com/static/js/widget.js"></script>
-
-  <!-- Schedule logic -->
   <script src="schedule.js"></script>
 
   <script>
-    const promptOverlay = document.getElementById("fullscreenPrompt");
     const body = document.body;
+    const promptOverlay = document.getElementById("fullscreenPrompt");
+    const trackEl = document.getElementById("trackTitle");
 
     function ensureFocus() {
       body.focus();
@@ -193,22 +176,33 @@
     /* ADMIN unlock */
     let keyBuffer = "";
     const SECRET = "ADMIN";
-
     window.addEventListener("keydown", (e) => {
       keyBuffer += e.key.toUpperCase();
-
       if (!SECRET.startsWith(keyBuffer)) keyBuffer = "";
-
       if (keyBuffer === SECRET) {
         keyBuffer = "";
         const code = prompt("Enter admin code:");
-        if (code === "6969") {
-          window.location.href = "admin.html";
-        } else if (code !== null) {
-          alert("Incorrect code");
-        }
+        if (code === "6969") window.location.href = "admin.html";
       }
     });
+
+    /* Extract song title safely */
+    function updateNowPlaying() {
+      const raw = document.getElementById("spinitronRaw");
+      if (!raw) return;
+
+      const text = raw.innerText
+        .replace(/\s+/g, " ")
+        .trim();
+
+      if (text.length > 0) {
+        // Remove artist if present (usually "Artist – Song")
+        const parts = text.split(" – ");
+        trackEl.textContent = parts.length > 1 ? parts[1] : parts[0];
+      }
+    }
+
+    setInterval(updateNowPlaying, 3000);
   </script>
 </body>
 </html>
