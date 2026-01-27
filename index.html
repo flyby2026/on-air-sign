@@ -89,7 +89,7 @@ img {
   margin-right: 6px;
 }
 
-/* Hide raw widget completely */
+/* Hidden Spinitron widget */
 #spinitronRaw {
   position: absolute;
   opacity: 0;
@@ -129,10 +129,10 @@ img {
   <!-- NOW PLAYING OUTPUT -->
   <div id="nowPlaying">
     <span class="label">NOW PLAYING:</span>
-    <span id="trackText">Loading…</span>
+    <span id="trackText">Waiting for track…</span>
   </div>
 
-  <!-- HIDDEN SPINITRON SOURCE -->
+  <!-- RAW SPINITRON -->
   <div id="spinitronRaw">
     <div class="spinitron-js-widget"
          data-action="now-playing-v2"
@@ -154,14 +154,7 @@ const body = document.body;
 const promptOverlay = document.getElementById("fullscreenPrompt");
 const trackEl = document.getElementById("trackText");
 
-/* Keep focus */
-function ensureFocus() {
-  body.focus();
-}
-window.addEventListener("load", ensureFocus);
-document.addEventListener("click", ensureFocus);
-
-/* Fullscreen controls */
+/* Fullscreen logic */
 document.addEventListener("click", () => {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().catch(() => {});
@@ -193,8 +186,8 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-/* Extract Artist - Song safely */
-function updateNowPlaying() {
+/* === SPINITRON OBSERVER (THE FIX) === */
+function parseNowPlaying() {
   const raw = document.getElementById("spinitronRaw");
   if (!raw) return;
 
@@ -204,20 +197,29 @@ function updateNowPlaying() {
 
   if (!text) return;
 
-  /* Remove timestamps */
+  // Remove timestamps
   text = text.replace(/\b\d{1,2}:\d{2}\s?(AM|PM)\b/gi, "").trim();
 
-  /* Normalize dashes */
+  // Normalize dashes
   text = text.replace(/[–—]/g, "-");
 
-  /* Extract Artist - Song */
+  // Extract Artist - Song
   const match = text.match(/(.+?)\s-\s(.+)/);
   if (!match) return;
 
   trackEl.textContent = `${match[1].trim()} - ${match[2].trim()}`;
 }
 
-setInterval(updateNowPlaying, 2000);
+/* Observe DOM changes instead of guessing timing */
+const observer = new MutationObserver(parseNowPlaying);
+observer.observe(document.getElementById("spinitronRaw"), {
+  childList: true,
+  subtree: true,
+  characterData: true
+});
+
+/* Fallback poll (safety net) */
+setInterval(parseNowPlaying, 3000);
 </script>
 </body>
 </html>
