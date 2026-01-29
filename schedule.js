@@ -69,7 +69,7 @@ const schedule = {
     { start: "13:00", end: "16:00", image: "FRIDAY WIKD TRAINING SLOT - 1-4PM.png" },
     { start: "16:00", end: "17:00", image: "FRIDAY DJ C-SQD - THE SHOPPING CART - 4-5PM.png" },
     { start: "17:00", end: "19:00", image: "FRIDAY OPEN STUDIO - 5-7PM.png" },
-    { start: "19:00", end: "20:00", image: "FRIDAY DJ Flyby - flyin’ with ryan - 7-8pm.png" },
+    { start: "19:00", end: "20:00", image: "FRIDAY DJ Flyby - flyin’ with ryan - 7-8pm NORM.png" },
     { start: "20:00", end: "22:00", image: "FRIDAY THE RAVE - 8-10pm.png" },
     { start: "22:00", end: "24:00", image: "FRIDAY DJ Ray - The sound lounge (10pm-12am).png" }
   ],
