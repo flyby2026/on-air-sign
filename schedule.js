@@ -16,7 +16,7 @@ const schedule = {
     { start: "17:00", end: "18:00", image: "MONDAY open studio 5-6pm).png" },
     { start: "18:00", end: "19:00", image: "MONDAY DJ L - Showcase (Monday 6-7 pm) (1).png" },
     { start: "19:00", end: "21:00", image: "MONDAY DJ Starman - The Flashback (monday 7-9 pm).png" },
-    { start: "21:00", end: "22:00", image: "MONDAY DJ Desinova - The Cosmic Jam (monday 9-10 pm).png" },
+    { start: "21:00", end: "22:00", image: "MONDAY COSMIC JAM 9-10.png" },
     { start: "22:00", end: "23:00", image: "MONDAY OPEN STUDIO - 10-11pm.png" },
     { start: "23:00", end: "24:00", image: "MONDAY DJ noli- holy cannoli (monday 11pm-12am).png" }
   ],
